@@ -42,34 +42,29 @@ client = ModelRegistryClient(
     author="Your Name",
 )
 
-# Register a model with format info (used by KServe to select the right
-# serving runtime)
+# Register a model
 model = client.register_model(
     name="my-model",
     uri="s3://bucket/path/to/model",
-    version="v1.0.0",
+    version="1.0.0",
     model_format_name="pytorch",
-    model_format_version="2.0",
-    version_description="My trained model",
 )
-
-# Get a registered model
-model = client.get_model("my-model")
 
 # List all models
 for model in client.list_models():
     print(f"Model: {model.name}")
 
-# List model versions
-for version in client.list_model_versions("my-model"):
-    print(f"Version: {version.name}")
+# Get a specific version and artifact
+version = client.get_model_version("my-model", "1.0.0")
+artifact = client.get_model_artifact("my-model", "1.0.0")
+print(f"Model URI: {artifact.uri}")
 ```
 
 > **Note:** `list_models()` and `list_model_versions()` return lazy iterators backed by pagination, so only the data you consume results in API calls – making it efficient to work with large registries.
 
 ## Distributed AI Data at Scale: SparkClient & SparkConnect
 
-Data is a fundamental piece to every AI workload, and Apache Spark has become a cornerstone technology for large-scale data processing. However, deploying and managing Spark workloads on Kubernetes presents multiple challenges and can introduce substantial operational overhead. In v0.4.0, the SDK introduces `SparkClient` – a high-level API for managing interactive and batch Spark workloads on Kubernetes sessions backed by the Kubeflow Spark Operator ([KEP-107](https://github.com/kubeflow/spark-operator/blob/master/docs/keps/kep-107-spark-connect/README.md)). In the initial version, SparkClient introduced support for interactive sessions through the SparkConnect custom resource. In future releases of the Kubeflow SDK, we will expand this support to include batch workloads as well.
+Data is a fundamental piece to every AI workload, and Apache Spark has become a cornerstone technology for large-scale data processing. However, deploying and managing Spark workloads on Kubernetes presents multiple challenges and can introduce substantial operational overhead. In v0.4.0, the SDK introduces `SparkClient` – a high-level API for managing interactive and batch Spark workloads on Kubernetes sessions backed by the Kubeflow Spark Operator ([KEP-107](https://github.com/kubeflow/sdk/blob/main/docs/proposals/107-spark-client/README.md)). In the initial version, SparkClient introduced support for interactive sessions through the SparkConnect custom resource. In future releases of the Kubeflow SDK, we will expand this support to include batch workloads as well.
 
 `SparkClient` supports two operational modes. In **create mode**, the SDK provisions a new SparkConnect interactive session on Kubernetes for you – handling CRD creation, pod scheduling, networking, and cleanup automatically. In **connect mode**, you point it at an existing Spark Connect server, useful for shared clusters or cross-namespace access. Either way, you get back a standard `SparkSession` and can write the same PySpark code you already know.
 
@@ -84,51 +79,47 @@ To install the Spark Operator, see the [installation guide](https://www.kubeflow
 ### Technical Example
 
 ```python
-from kubeflow.spark import SparkClient, Executor
+from kubeflow.spark import SparkClient, Name
 from kubeflow.common.types import KubernetesBackendConfig
 
 client = SparkClient(
     backend_config=KubernetesBackendConfig(namespace="spark-test")
 )
 
-# Level 1: Minimal -- use all defaults
-spark = client.connect()
+# Level 1: Minimal - use all defaults
+spark = client.connect(options=[Name("my-session")])
 df = spark.range(5)
 df.show()
-spark.stop()
+client.delete_session("my-session")
 
 # Level 2: Simple -- configure executors and resources
 spark = client.connect(
     num_executors=5,
     resources_per_executor={"cpu": "5", "memory": "1Gi"},
     spark_conf={"spark.sql.adaptive.enabled": "true"},
+    options=[Name("my-session-2")],
 )
 df = spark.range(5)
 df.show()
-spark.stop()
-
-# Level 3: Advanced -- full control with Driver/Executor objects
-spark = client.connect(
-    executor=Executor(
-        num_instances=10,
-        resources_per_executor={"cpu": "4", "memory": "8Gi"},
-    ),
-    spark_conf={"spark.sql.shuffle.partitions": "200"},
-)
-df = spark.read.parquet("s3://data-bucket/raw/")
-df.filter(df.value > 100).write.parquet("s3://data-bucket/processed/")
-spark.stop()
+client.delete_session("my-session-2")
 
 # Connect mode -- attach to an existing Spark Connect server
 spark = client.connect(base_url="sc://spark-server:15002")
 df = spark.sql("SELECT * FROM my_table")
 df.show()
-spark.stop()
 ```
 
 Default specifications: Spark 4.0.1, 1 executor, 512Mi memory and 1 CPU per pod, 300 second session timeout.
 
-> **Note:** v0.4.0 focuses on SparkConnect session management. Batch job support (`submit_job`, `get_job`, `list_jobs`) is planned for a future release.
+### What's Next for SparkClient
+
+The v0.4.0 release is just the beginning for SparkClient. Here's what's on the horizon:
+
+- **End-to-end AI pipelines** orchestrate data processing, training, and optimization using SparkClient, TrainerClient, and OptimizerClient within the unified Kubeflow SDK
+- **Multi-cluster job submission** as Kueue integrates with the SparkApplication CR, users will be able to submit Spark jobs across multiple clusters using Multi-Kueue capabilities
+- **MLflow integration** native MLflow support in the Kubeflow SDK will provide additional metrics and experiment tracking for Spark jobs
+
+> **Note:** v0.4.0 focuses on SparkConnect session management. Batch job support via SparkApplication CR (`submit_job`, `get_job`, `list_jobs`) is planned for a future release.
 
 ## A New Home for Documentation
 
