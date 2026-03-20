@@ -11,10 +11,14 @@ author: "Kubeflow SDK Team"
 
 With KubeCon just around the corner, we are pleased to announce the release of Kubeflow SDK v0.4.0. This release continues the work toward providing a unified, Pythonic interface for all AI workloads on Kubernetes.
 
-The v0.4.0 release focuses on bridging the gap between data engineering, model management, and production-ready ML pipelines. Highlights in Kubeflow SDK v0.4.0 include:
+The v0.4.0 release focuses on bridging the gap between data engineering, model management, and production-ready ML pipelines. The Kubeflow SDK now supports all Kubeflow projects except Kubeflow Pipelines:
+
+![Kubeflow SDK Diagram](/images/2026-03-19-kubeflow-sdk-0.4.0-release/kubeflow-sdk.png)
+
+Highlights in Kubeflow SDK v0.4.0 include:
 
 - [Model Registry Client](https://sdk.kubeflow.org/en/latest/hub/index.html) for managing model artifacts, versions, and metadata directly from the SDK.
-- [SparkClient API](https://sdk.kubeflow.org/en/latest/spark/index.html) with SparkConnect support for distributed data processing workflows
+- [SparkClient API](https://sdk.kubeflow.org/en/latest/spark/index.html) with SparkConnect support for interactive data processing
 - [Namespaced TrainingRuntimes](#better-isolation-with-namespaced-trainingruntimes) for improved isolation and multi-tenant platform management
 - [Dataset and Model Initializers](#furthering-parity-between-local-and-remote-execution) enabling better parity between local and Kubernetes execution
 - [A new Kubeflow SDK documentation website](#a-new-home-for-documentation) with examples, and API reference
@@ -153,6 +157,18 @@ This change ensures that all SDK users benefit from better security patches, imp
 
 **To Upgrade:** Ensure your local environment, Notebook images, and CI/CD pipelines are running Python 3.10 or higher before running `pip install --upgrade kubeflow`
 
+## What's Next for Kubeflow SDK
+
+Looking ahead, the Kubeflow SDK [2026 Roadmap](https://github.com/kubeflow/sdk/pull/326) outlines several exciting initiatives:
+
+- **Kubeflow MCP Server** to enable AI-assisted interactions with Kubeflow resources
+- **OpenTelemetry integration** for improved observability across SDK operations
+- **MLflow support** for experiment tracking and metrics
+- **First class support for Kubeflow Pipelines** to bring KFP into the unified SDK
+- **TrainJob checkpointing and dynamic LLM Trainers** for more flexible and resilient training workflows
+
+We encourage the community to review and contribute to the roadmap.
+
 ## Get Involved!
 
 The Kubeflow SDK is built by and for the community. We welcome contributions, feedback, and participation from everyone! We want to thank the community for their contributions to this release. We invite you to:
@@ -170,4 +186,4 @@ The Kubeflow SDK is built by and for the community. We welcome contributions, fe
 **Learn More**
 - View the full [Changelog](https://github.com/kubeflow/kubeflow-sdk/releases/tag/v0.4.0).
 
-**Headed to [KubeCon](https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/)?** Stop by the Kubeflow booth to see these features in action!
+**Headed to [KubeCon + CloudNativeCon 2026 EU](https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/)?** Stop by the Kubeflow booth to see these features in action!
