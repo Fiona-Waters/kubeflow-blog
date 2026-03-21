@@ -13,7 +13,7 @@ author: "Kubeflow SDK Team"
 
 With KubeCon just around the corner, we are pleased to announce the release of Kubeflow SDK v0.4.0. This release continues the work toward providing a unified, Pythonic interface for all AI workloads on Kubernetes.
 
-The v0.4.0 release focuses on bridging the gap between data engineering, model management, and production-ready ML pipelines. The Kubeflow SDK now covers most of the MLOps lifecycle – from data processing and model training to model registration and serving:
+The v0.4.0 release focuses on bridging the gap between data engineering, model management, and production-ready ML pipelines. The Kubeflow SDK now covers most of the MLOps lifecycle – from data processing and hyperparameter optimization to model training and registration:
 
 ![Kubeflow SDK Diagram](/images/2026-03-19-kubeflow-sdk-0.4.0-release/kubeflow-sdk.png)
 
