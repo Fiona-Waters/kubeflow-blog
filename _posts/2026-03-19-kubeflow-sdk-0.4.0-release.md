@@ -2,16 +2,18 @@
 toc: true
 layout: post
 comments: true
-title: "Announcing Kubeflow SDK v0.4.0: Model Registry, SparkConnect, and Enhanced Developer Experience"
+title: "Kubeflow SDK v0.4.0: Model Registry, SparkConnect, and Enhanced Developer Experience"
 hide: false
 categories: [release, sdk]
 permalink: /kubeflow-sdk-0.4.0-release/
 author: "Kubeflow SDK Team"
 ---
 
+> **Explore the full documentation at [sdk.kubeflow.org](https://sdk.kubeflow.org)**
+
 With KubeCon just around the corner, we are pleased to announce the release of Kubeflow SDK v0.4.0. This release continues the work toward providing a unified, Pythonic interface for all AI workloads on Kubernetes.
 
-The v0.4.0 release focuses on bridging the gap between data engineering, model management, and production-ready ML pipelines. The Kubeflow SDK now supports all Kubeflow projects except Kubeflow Pipelines:
+The v0.4.0 release focuses on bridging the gap between data engineering, model management, and production-ready ML pipelines. The Kubeflow SDK now covers most of the MLOps lifecycle – from data processing and model training to model registration and serving:
 
 ![Kubeflow SDK Diagram](/images/2026-03-19-kubeflow-sdk-0.4.0-release/kubeflow-sdk.png)
 
@@ -36,7 +38,7 @@ Install the hub extra to get started:
 pip install 'kubeflow[hub]'
 ```
 
-### Technical Example
+### Usage Example
 
 ```python
 from kubeflow.hub import ModelRegistryClient
@@ -68,7 +70,7 @@ print(f"Model URI: {artifact.uri}")
 
 ## Distributed AI Data at Scale: SparkClient & SparkConnect
 
-Data is a fundamental piece to every AI workload, and Apache Spark has become a cornerstone technology for large-scale data processing. However, deploying and managing Spark workloads on Kubernetes presents multiple challenges and can introduce substantial operational overhead. In v0.4.0, the SDK introduces `SparkClient` – a high-level API for managing interactive and batch Spark workloads on Kubernetes sessions backed by the Kubeflow Spark Operator ([KEP-107](https://github.com/kubeflow/sdk/blob/main/docs/proposals/107-spark-client/README.md)). In the initial version, SparkClient introduced support for interactive sessions through the SparkConnect custom resource. In future releases of the Kubeflow SDK, we will expand this support to include batch workloads as well.
+Data is a fundamental piece to every AI workload, and Apache Spark has become a cornerstone technology for large-scale data processing. However, deploying and managing Spark workloads on Kubernetes has traditionally required users to work directly with Kubernetes manifests and YAML configurations – a process that can be operationally complex. In v0.4.0, the SDK introduces `SparkClient` – a high-level, Pythonic API that eliminates this complexity, allowing data engineers and ML practitioners to manage interactive and batch Spark workloads on Kubernetes without writing a single line of YAML. Backed by the Kubeflow Spark Operator ([KEP-107](https://github.com/kubeflow/sdk/blob/main/docs/proposals/107-spark-client/README.md)), the initial version of SparkClient introduces support for interactive sessions through the SparkConnect custom resource. In future releases of the Kubeflow SDK, we will expand this support to include batch workloads as well.
 
 `SparkClient` supports two operational modes. In **create mode**, the SDK provisions a new SparkConnect interactive session on Kubernetes for you – handling CRD creation, pod scheduling, networking, and cleanup automatically. In **connect mode**, you point it at an existing Spark Connect server, useful for shared clusters or cross-namespace access. Either way, you get back a standard `SparkSession` and can write the same PySpark code you already know.
 
@@ -80,7 +82,7 @@ pip install 'kubeflow[spark]'
 
 To install the Spark Operator, see the [installation guide](https://www.kubeflow.org/docs/components/spark-operator/getting-started/).
 
-### Technical Example
+### Usage Example
 
 ```python
 from kubeflow.spark import SparkClient, Name
@@ -115,19 +117,11 @@ df.show()
 
 Default specifications: Spark 4.0.1, 1 executor, 512Mi memory and 1 CPU per pod, 300 second session timeout.
 
-### What's Next for SparkClient
-
-The v0.4.0 release is just the beginning for SparkClient. Here's what's on the horizon:
-
-- **End-to-end AI pipelines** orchestrate data processing, training, and optimization using SparkClient, TrainerClient, and OptimizerClient within the unified Kubeflow SDK
-- **Multi-cluster job submission** as Kueue integrates with the SparkApplication CR, users will be able to submit Spark jobs across multiple clusters using Multi-Kueue capabilities
-- **MLflow integration** native MLflow support in the Kubeflow SDK will provide additional metrics and experiment tracking for Spark jobs
-
 > **Note:** v0.4.0 focuses on SparkConnect session management. Batch job support via SparkApplication CR (`submit_job`, `get_job`, `list_jobs`) is planned for a future release.
 
 ## A New Home for Documentation
 
-To support the Kubeflow SDK users and contributors, we've introduced a dedicated [Kubeflow SDK Documentation Website](https://sdk.kubeflow.org). This site includes:
+To support the Kubeflow SDK users and contributors, we've introduced a dedicated [Kubeflow SDK Website](https://sdk.kubeflow.org). This site includes:
 
 - **[Quickstart](https://sdk.kubeflow.org/en/latest/quickstart/):** Train your first model with Kubeflow SDK
 - **[API Reference](https://sdk.kubeflow.org/en/latest/reference/):** Automatically updated documentation for all SDK modules.
@@ -166,6 +160,9 @@ Looking ahead, the Kubeflow SDK [2026 Roadmap](https://github.com/kubeflow/sdk/p
 - **MLflow support** for experiment tracking and metrics
 - **First class support for Kubeflow Pipelines** to bring KFP into the unified SDK
 - **TrainJob checkpointing and dynamic LLM Trainers** for more flexible and resilient training workflows
+- **End-to-end AI pipelines** orchestrating data processing, training, and optimization using SparkClient, TrainerClient, and OptimizerClient
+- **Multi-cluster job submission** leveraging Kueue and Multi-Kueue capabilities for Spark and training workloads
+- **Batch Spark job support** via SparkApplication CR for submit, get, and list operations
 
 We encourage the community to review and contribute to the roadmap.
 
@@ -184,6 +181,7 @@ The Kubeflow SDK is built by and for the community. We welcome contributions, fe
 - Attend the [Kubeflow SDK and ML Experience WG meetings](https://www.kubeflow.org/docs/about/community/#kubeflow-community-calendars)
 
 **Learn More**
+- Visit the [Kubeflow SDK Website](https://sdk.kubeflow.org)
 - View the full [Changelog](https://github.com/kubeflow/kubeflow-sdk/releases/tag/v0.4.0).
 
 **Headed to [KubeCon + CloudNativeCon 2026 EU](https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/)?** Stop by the Kubeflow booth to see these features in action!
