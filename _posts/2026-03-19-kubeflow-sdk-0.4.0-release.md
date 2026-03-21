@@ -123,9 +123,9 @@ Default specifications: Spark 4.0.1, 1 executor, 512Mi memory and 1 CPU per pod,
 
 To support the Kubeflow SDK users and contributors, we've introduced a dedicated [Kubeflow SDK Website](https://sdk.kubeflow.org). This site includes:
 
-- **[Quickstart](https://sdk.kubeflow.org/en/latest/quickstart/):** Train your first model with Kubeflow SDK
-- **[API Reference](https://sdk.kubeflow.org/en/latest/reference/):** Automatically updated documentation for all SDK modules.
-- **[Examples](https://sdk.kubeflow.org/en/latest/examples/):** Step-by-step guides from local prototyping to remote training.
+- **[Quickstart](https://sdk.kubeflow.org/en/latest/getting-started/quickstart.html):** Train your first model with Kubeflow SDK
+- **[API Reference](https://sdk.kubeflow.org/en/latest/train/api.html):** Automatically updated documentation for all SDK modules.
+- **[Examples](https://sdk.kubeflow.org/en/latest/examples.html):** Step-by-step guides from local prototyping to remote training.
 
 ## Infrastructure & Breaking Changes
 
@@ -133,13 +133,13 @@ This release includes several architectural updates to ensure the SDK remains se
 
 ### Better Isolation with Namespaced TrainingRuntimes
 
-Security and multi-tenancy are core to Kubeflow. In v0.4.0, we've introduced support for [Namespaced TrainingRuntimes](https://www.kubeflow.org/docs/components/trainer/trainingruntimes/). This allows platform teams to provide curated training environments at the namespace level, ensuring that one team's custom training configuration doesn't interfere with another's.
+Security and multi-tenancy are core to Kubeflow. In v0.4.0, we've introduced support for [Namespaced TrainingRuntimes](https://www.kubeflow.org/docs/components/trainer/operator-guides/runtime/#what-is-trainingruntime). This allows platform teams to provide curated training environments at the namespace level, ensuring that one team's custom training configuration doesn't interfere with another's.
 
 **Upgrade Note:** The SDK now prioritizes namespaced runtimes over cluster-wide ones. If you have runtimes with duplicate names in different scopes, verify your `TrainerClient` calls are targeting the intended resources.
 
 ### Furthering Parity Between Local and Remote Execution
 
-One of the biggest hurdles in MLOps is the "it worked on my machine" syndrome. With the addition of [Dataset and Model Initializers](https://www.kubeflow.org/docs/components/trainer/initializers/) for the `ContainerBackend`, the SDK now emulates how Kubernetes handles data dependencies.
+One of the biggest hurdles in MLOps is the "it worked on my machine" syndrome. With the addition of Dataset and Model Initializers for the `ContainerBackend`, the SDK now emulates how Kubernetes handles data dependencies.
 
 Whether you are running locally on Docker or at scale on a cluster, the SDK now automatically manages the "plumbing" of mounting and initializing your data. This ensures your local development environment mirrors the data-loading behavior of your production training jobs.
 
@@ -172,16 +172,16 @@ The Kubeflow SDK is built by and for the community. We welcome contributions, fe
 
 - **Try it out:** `pip install kubeflow==0.4.0`
 - **Contribute:**
-  - Read the [Contributing Guide](https://github.com/kubeflow/kubeflow-sdk/blob/main/CONTRIBUTING.md).
-  - Browse the [good first issues](https://github.com/kubeflow/kubeflow-sdk/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
-  - Explore the [GitHub Repository](https://github.com/kubeflow/kubeflow-sdk)
+  - Read the [Contributing Guide](https://github.com/kubeflow/sdk/blob/main/CONTRIBUTING.md).
+  - Browse the [good first issues](https://github.com/kubeflow/sdk/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+  - Explore the [GitHub Repository](https://github.com/kubeflow/sdk)
 
 **Connect with the Community:**
-- Join [#kubeflow-ml-experience](https://cloud-native.slack.com/archives/C07CZ35LXNK) on CNCF Slack
+- Join [#kubeflow-sdk](https://cloud-native.slack.com/archives/C08KJBVDH5H) on [CNCF Slack](https://www.kubeflow.org/docs/about/community/#kubeflow-slack-channels)
 - Attend the [Kubeflow SDK and ML Experience WG meetings](https://www.kubeflow.org/docs/about/community/#kubeflow-community-calendars)
 
 **Learn More**
 - Visit the [Kubeflow SDK Website](https://sdk.kubeflow.org)
-- View the full [Changelog](https://github.com/kubeflow/kubeflow-sdk/releases/tag/v0.4.0).
+- View the full [Changelog](https://github.com/kubeflow/sdk/releases/tag/0.4.0).
 
 **Headed to [KubeCon + CloudNativeCon 2026 EU](https://events.linuxfoundation.org/kubecon-cloudnativecon-europe/)?** Stop by the Kubeflow booth to see these features in action!
